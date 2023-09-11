@@ -2,6 +2,8 @@ import cors from "cors";
 import helmet from "helmet";
 import express from "express";
 import { contract } from "@post-vote/contract";
+import * as swaggerUi from "swagger-ui-express";
+import { generateOpenApi } from "@ts-rest/open-api";
 import { initServer, createExpressEndpoints } from "@ts-rest/express";
 
 // DB
@@ -30,6 +32,15 @@ function start() {
   app.use(helmet());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  const openApi = generateOpenApi(
+    contract,
+    {
+      info: { version: "1.0.0", title: "Post & Vote API" },
+    },
+    { setOperationId: true }
+  );
+  app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApi));
 
   const s = initServer();
   const router = s.router(contract, {
