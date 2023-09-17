@@ -7,7 +7,8 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently --kill-others-on-fail -p \"{pid}\" -c \"blue,red,green\" \"yarn workspace @post-vote/contract build\" \"yarn workspace @post-vote/server dev\" \"yarn workspace @post-vote/client dev\""
+    "prestart": "yarn workspace @post-vote/contract build",
+    "start": "concurrently --kill-others-on-fail -p \"{pid}\" -c \"red,green\" \"yarn workspace @post-vote/server dev\" \"yarn workspace @post-vote/client dev\""
   },
   "dependencies": {
     "concurrently": "^8.2.1"
