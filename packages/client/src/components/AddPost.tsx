@@ -2,11 +2,8 @@ import { Post } from "@post-vote/contract";
 import { useState, ChangeEvent, FormEvent } from "react";
 
 type LeanPost = Omit<Post, "_id">;
-type AddPostProps = {
-  onSaved: (post: Post) => void;
-};
 
-export function AddPost({ onSaved }: AddPostProps) {
+export function AddPost() {
   const [isSaving, setIsSaving] = useState(false);
   const [post, setPost] = useState<LeanPost>({
     body: "",
@@ -32,9 +29,9 @@ export function AddPost({ onSaved }: AddPostProps) {
         body: JSON.stringify(post),
         headers: { "Content-Type": "application/json" },
       });
-      const data = (await response.json()) as Post;
 
-      onSaved(data);
+      await response.json();
+
       setPost({ body: "", title: "" });
     } catch (error) {
       console.error({ error });

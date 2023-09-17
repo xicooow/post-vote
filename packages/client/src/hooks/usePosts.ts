@@ -6,16 +6,16 @@ export function usePosts() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const controller = new AbortController();
+    let cancelled = false;
 
     (async () => {
       try {
         setIsLoading(true);
 
-        const response = await fetch("http://localhost:5000/posts", {
-          signal: controller.signal,
-        });
+        const response = await fetch("http://localhost:5000/posts");
         const data = (await response.json()) as Post[];
+
+        if (cancelled) return;
 
         setPosts(data);
       } catch (error) {
@@ -26,7 +26,7 @@ export function usePosts() {
     })();
 
     return () => {
-      controller.abort();
+      cancelled = true;
     };
   }, []);
 
